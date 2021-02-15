@@ -141,5 +141,72 @@ int ot_recv_compute_v(char *v) {
 /*
 计算ki 可能会因为v的值过大产生影响
 考虑：不需要使用128位的rsa，（OT128 和rsa的密钥长度之间是否有关，需要仔细考虑）
-
 */
+int ot_send_ki_msg(char *k_msg1,char *k_msg2) {
+	BIGNUM* k1, * k2,*V,*MSG1,*MSG2,*D,*N;
+	BN_CTX* ctx = BN_CTX_new();//上下文
+	BIGNUM* kk1, * kk2;//存放中间结果
+	//char* v, * msg1, * msg2;//v是接收方返回的v，msg1，msg2是本地生成的随机消息
+	char* v = "98032802701422985095809262789";
+	char* msg1 = "230726424116115127964807962396114318751";
+	char* msg2 = "276561317088951180109633970008567608500";
+	char* d = "22598753513062374258858403349";
+	char* n = "944627896846009196627839828073";
+	/*
+	*************************************RSA******************************
+	883885314687967
+	1068722243880119
+	n:944627896846009196627839828073
+	e:209
+	d:22598753513062374258858403349
+	944627896846009196627839828073
+	209
+	******************************RANDOM MSG******************************
+	230726424116115127964807962396114318751
+	276561317088951180109633970008567608500
+	******************************compute v******************************
+	98032802701422985095809262789
+	*/
+	k1 = BN_new();
+	k2 = BN_new();
+	V = BN_new();
+	MSG1 = BN_new();
+	MSG2 = BN_new();
+	D = BN_new();
+	N = BN_new();
+	kk1 = BN_new();
+	kk2 = BN_new();
+	BN_dec2bn(&V,v);//成功转化
+	BN_dec2bn(&MSG1,msg1);
+	BN_dec2bn(&MSG2,msg2);
+	BN_dec2bn(&N, n);
+	BN_dec2bn(&D, d);
+	BN_sub(kk1, V, MSG1);
+	BN_sub(kk2, V, MSG2);
+	//int BN_mod_exp(BIGNUM *r, BIGNUM *a, const BIGNUM *p, const BIGNUM *m, BN_CTX *ctx);	计算a的p次方，再模m，值储存在r中, r = (a ^ p) % m如果成功返回1, 否则返回0
+	BN_mod_exp(k1, kk1, D, N,ctx);
+	BN_mod_exp(k2, kk2, D, N,ctx);
+	char* ans1;
+	char* ans2;//存放最终结果ki
+	ans1 = BN_bn2dec(k1);
+	ans2 = BN_bn2dec(k2);
+	strcpy(k_msg1,ans1);
+	strcpy(k_msg2, ans2);
+	BN_CTX_free(ctx);
+}
+
+/*
+加密真实信息，使用ot_send_ki_msg得到的k_msg
+*/
+int ot_decode_msg() {
+	//1.第一步：把一个string转换为数字
+	//1.转为16进制，转为10进制
+	char* msg1 = "abcdefghijklmn";
+	char* msg2 = "opqrstuvwxyz";
+	printf("ascii code %c\n", msg1[1]+1);//char可以直接加减1
+	printf("strlen() function %d\n", strlen(msg1));//strlen函数可以获得真实长度
+	BIGNUM* m1, * m2;
+	m1 = BN_new();
+	m2 = BN_new();
+	
+}

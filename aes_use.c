@@ -68,7 +68,19 @@ int main(void)
     printf("******************************compute v******************************\n");
     char v[100];
     ot_recv_compute_v(v);
-    printf("%s", v);
+    printf("%s\n", v);
+    printf("******************************compute ki******************************\n");
+    char k1[100];
+    char k2[100];
+    ot_send_ki_msg(k1, k2);
+    printf("%s\n", k1);
+    printf("%s\n", k2);
+    printf("%d",sizeof(k1));
+    /*
+    k1,k2作为key对真正的两个msg进行加密
+    */
+    printf("******************************msg encode******************************\n");
+    ot_decode_msg();
     return 0;
 }
 void handleErrors(void)
