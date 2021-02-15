@@ -54,11 +54,14 @@ int main(void)
     printf("%s\n", decryptedtext);
 
     printf("*************************************RSA******************************\n");
-    char aa[100];
-    char bb[100];
-    ot_send_rsa_msg(aa,bb);
-    printf("%s\n", aa);
-    printf("%s\n", bb);
+    char nn[100];
+    char ee[100];
+    char dd[100];
+    ot_send_rsa_msg(nn,ee,dd);
+    //printf("%s\n", aa);
+    //printf("%s\n", bb);
+    //printf("%s\n", cc);
+    //printf("%d\n", strlen(cc)); strlen(cc)显示真实长度
     printf("******************************RANDOM MSG******************************\n");
     char msg_r1[100];//128位
     char msg_r2[100];
@@ -67,20 +70,37 @@ int main(void)
     printf("%s\n", msg_r2);
     printf("******************************compute v******************************\n");
     char v[100];
-    ot_recv_compute_v(v);
-    printf("%s\n", v);
+    char k[100];
+    ot_recv_compute_v(v,k,nn,ee,msg_r1,msg_r2);
+    printf("V:%s\n", v);
+    printf("K:%s\n", k);
     printf("******************************compute ki******************************\n");
     char k1[100];
     char k2[100];
-    ot_send_ki_msg(k1, k2);
+    ot_compute_ki_msg(k1, k2,v,msg_r1,msg_r2,dd,nn);
     printf("%s\n", k1);
     printf("%s\n", k2);
-    printf("%d",sizeof(k1));
+    //printf("%d\n", strlen(k1));
     /*
     k1,k2作为key对真正的两个msg进行加密
     */
     printf("******************************msg encode******************************\n");
-    ot_decode_msg();
+    char enmsg1[100];
+    char enmsg2[100];
+    char* irl_msg1 = "hello lili";
+    char* irl_msg2 = "are you ok?";
+    ot_encode_msg(enmsg1,enmsg2,k1,k2,irl_msg1,irl_msg2);
+    printf("%s\n", enmsg1);
+    printf("%s\n", enmsg2);
+    printf("******************************msg decode******************************\n");
+    char demsg1[100];
+    char demsg2[100];
+    ot_decode_msg(demsg1,demsg2,enmsg1,enmsg2,k);
+    printf("%s\n", demsg1);
+    printf("%s\n", demsg2);
+    
+
+
     return 0;
 }
 void handleErrors(void)
