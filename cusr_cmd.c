@@ -1,23 +1,23 @@
-#include "im_client.h"
+ï»¿#include "im_client.h"
 
 /*
 
-Á÷³Ì£º
-1. µ÷ÓÃfgestº¯Êý´Ó±ê×¼ÊäÈëÖÐ»ñÈ¡ÓÃ»§ÊäÈëµÄÃüÁî£¬²¢¶Ô¸ÃÃüÁî½øÐÐÔ¤´¦Àí¡£
-2. strtok_sº¯Êý½«ÓÃ»§ÃüÁîµÄµÚÒ»¸ö×Ö¶Î½âÎö³öÀ´£¨ÃüÁî¹Ø¼ü×Ö½âÎö£©
-3. ÓÃÒ»¸ö¶à·ÖÖ§µÄif-elseÓï¾äÅÐ¶ÏÃüÁîµÄÀàÐÍ£¬¸ù¾ÝÃüÁîµ÷ÓÃ²»Í¬µÄÃüÁî´¦Àíº¯Êý
-4. ÔÚÃüÁî´¦Àíº¯ÊýÖÐµ÷ÓÃcmdline_procº¯Êý¶ÔÓÃ»§µÄÃüÁî¹Ø¼ü×ÖºóµÄ¸÷×Ö¶Î½øÐÐÌáÈ¡
-5. ÈôÓÃ»§ÊäÈëµÄÃüÁî×Ö¶ÎºÏ·¨£¬¶Ô×Ö¶ÎÄÚÈÝ½øÐÐºÏ·¨ÐÔÑéÖ¤¡£
-6. ¸ù¾ÝÃüÁîÀàÐÍÅÐ¶Ï£¬¸ÃÃüÁîÊÇÍøÂçÃüÁî»¹ÊÇ±¾µØÃüÁî¡£
-	ÈôÎªÍøÂçÃüÁî£¬Ôò¶Ô¶ÔÓ¦µÄÏûÏ¢½øÐÐ·â×°£¬µ÷ÓÃclient_sendº¯Êý°Ñ·â×°µÄÏûÏ¢·¢Íê·þÎñÆ÷¡£
-	ÈôÎª±¾µØÃüÁî£¬Ôòµ÷ÓÃÏàÓ¦µÄ³ÌÐò½øÐÐ´¦Àí£¬È»ºóÃüÁî´¦ÀíÍê±Ï£¬ÔÙ×ªÖÁµÚ1²½£¬¼ÌÐøµÈ´ýÓÃ»§ÊäÈëµÄÏÂÒ»¸öÃüÁî²¢´¦Àí¡£
+æµç¨‹ï¼š
+1. è°ƒç”¨fgestå‡½æ•°ä»Žæ ‡å‡†è¾“å…¥ä¸­èŽ·å–ç”¨æˆ·è¾“å…¥çš„å‘½ä»¤ï¼Œå¹¶å¯¹è¯¥å‘½ä»¤è¿›è¡Œé¢„å¤„ç†ã€‚
+2. strtok_så‡½æ•°å°†ç”¨æˆ·å‘½ä»¤çš„ç¬¬ä¸€ä¸ªå­—æ®µè§£æžå‡ºæ¥ï¼ˆå‘½ä»¤å…³é”®å­—è§£æžï¼‰
+3. ç”¨ä¸€ä¸ªå¤šåˆ†æ”¯çš„if-elseè¯­å¥åˆ¤æ–­å‘½ä»¤çš„ç±»åž‹ï¼Œæ ¹æ®å‘½ä»¤è°ƒç”¨ä¸åŒçš„å‘½ä»¤å¤„ç†å‡½æ•°
+4. åœ¨å‘½ä»¤å¤„ç†å‡½æ•°ä¸­è°ƒç”¨cmdline_procå‡½æ•°å¯¹ç”¨æˆ·çš„å‘½ä»¤å…³é”®å­—åŽçš„å„å­—æ®µè¿›è¡Œæå–
+5. è‹¥ç”¨æˆ·è¾“å…¥çš„å‘½ä»¤å­—æ®µåˆæ³•ï¼Œå¯¹å­—æ®µå†…å®¹è¿›è¡Œåˆæ³•æ€§éªŒè¯ã€‚
+6. æ ¹æ®å‘½ä»¤ç±»åž‹åˆ¤æ–­ï¼Œè¯¥å‘½ä»¤æ˜¯ç½‘ç»œå‘½ä»¤è¿˜æ˜¯æœ¬åœ°å‘½ä»¤ã€‚
+	è‹¥ä¸ºç½‘ç»œå‘½ä»¤ï¼Œåˆ™å¯¹å¯¹åº”çš„æ¶ˆæ¯è¿›è¡Œå°è£…ï¼Œè°ƒç”¨client_sendå‡½æ•°æŠŠå°è£…çš„æ¶ˆæ¯å‘å®ŒæœåŠ¡å™¨ã€‚
+	è‹¥ä¸ºæœ¬åœ°å‘½ä»¤ï¼Œåˆ™è°ƒç”¨ç›¸åº”çš„ç¨‹åºè¿›è¡Œå¤„ç†ï¼Œç„¶åŽå‘½ä»¤å¤„ç†å®Œæ¯•ï¼Œå†è½¬è‡³ç¬¬1æ­¥ï¼Œç»§ç»­ç­‰å¾…ç”¨æˆ·è¾“å…¥çš„ä¸‹ä¸€ä¸ªå‘½ä»¤å¹¶å¤„ç†ã€‚
 */
 
-/*¶ÔÃüÁîµÄ¸÷¸ö×Ö¶Î½øÐÐ·Ö½â
-@n_tok: È¥³ýÁËÃüÁî¹Ø¼ü×ÖµÄÃüÁîÐÐ×Ö·û´®Ö¸Õë
-@p: ¸÷¸ö×Ö¶ÎµÄÖ¸ÕëÊý×é
-@cnt: Êý×éµÄ³ÉÔ±¸öÊý
-@strict: ¸ñÊ½ÊÇ·ñÓÐÑÏ¸ñµÄ¸ñÊ½±êÖ¾ ¡¾1|0¡¿
+/*å¯¹å‘½ä»¤çš„å„ä¸ªå­—æ®µè¿›è¡Œåˆ†è§£
+@n_tok: åŽ»é™¤äº†å‘½ä»¤å…³é”®å­—çš„å‘½ä»¤è¡Œå­—ç¬¦ä¸²æŒ‡é’ˆ
+@p: å„ä¸ªå­—æ®µçš„æŒ‡é’ˆæ•°ç»„
+@cnt: æ•°ç»„çš„æˆå‘˜ä¸ªæ•°
+@strict: æ ¼å¼æ˜¯å¦æœ‰ä¸¥æ ¼çš„æ ¼å¼æ ‡å¿— ã€1|0ã€‘
 */
 int cmdline_proc(char *n_tok, char **p, int cnt, int strict)
 {
@@ -36,7 +36,7 @@ int cmdline_proc(char *n_tok, char **p, int cnt, int strict)
 	{
 		token = strtok_s(NULL, seps, &n_tok);
 		p[i] = token;
-		/*ÓÃ»§Ìá¹©µÄÃüÁî²ÎÊý²»¹»*/
+		/*ç”¨æˆ·æä¾›çš„å‘½ä»¤å‚æ•°ä¸å¤Ÿ*/
 		if (i != n - 1 && !p[i])
 		{
 			return -1;
@@ -347,6 +347,16 @@ int debug_cmd_proc(char *n_tok)
 
 }
 
+/*
+otæ¡æ‰‹åè®®åˆå§‹åŒ–
+*/
+//int handsk_cmd_proc(char* n_tok) {
+//
+//}
+
+
+
+
 int usr_stat_check(char *token)
 {
 	//printf("usr_stat_check, token=\"%s\"\n", token);
@@ -367,8 +377,8 @@ int usr_stat_check(char *token)
 	
 }
 /*
-ÃüÁî´¦Àíº¯Êý
-@buf: ÓÃ»§ÊäÈëµÄÃüÁî×Ö·û´®»º³åÇø
+å‘½ä»¤å¤„ç†å‡½æ•°
+@buf: ç”¨æˆ·è¾“å…¥çš„å‘½ä»¤å­—ç¬¦ä¸²ç¼“å†²åŒº
 */
 int usr_cmd_process(char *buf)
 {
@@ -429,6 +439,10 @@ int usr_cmd_process(char *buf)
 	{
 		return help_cmd_proc(next_token);
 	}
+	/*else if (!_stricmp(token, HANDSK_CMD))
+	{
+		return handsk_cmd_proc(next_token);
+	}*/
 	else 
 	{
 		fprintf(stderr, "%s%s", INV_C_USAGE, CLIENT_USAGE);

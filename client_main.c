@@ -80,7 +80,7 @@ void *client_cli_thread(void *arg){
 
 	while (1)
 	{
-		if (myself.w_id != -1)
+		if (myself.w_id != -1)//有无id的情况
 		{
 			/*
 			C:\Users\Oscar>

@@ -28,6 +28,7 @@
     <ClCompile Include="cmsg_dec.c" />
     <ClCompile Include="cmsg_enc.c" />
     <ClCompile Include="cusr_cmd.c" />
+    <ClCompile Include="handsk.c" />
     <ClCompile Include="list.c" />
     <ClCompile Include="msg_cipher.c" />
     <ClCompile Include="ot.c" />
@@ -40,6 +41,7 @@
     <ClInclude Include="cmsg_dec.h" />
     <ClInclude Include="cmsg_enc.h" />
     <ClInclude Include="cusr_cmd.h" />
+    <ClInclude Include="handsk.h" />
     <ClInclude Include="im_client.h" />
     <ClInclude Include="list.h" />
     <ClInclude Include="msg_cipher.h" />
@@ -124,7 +126,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -139,7 +141,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>

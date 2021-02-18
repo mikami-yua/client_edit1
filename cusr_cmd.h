@@ -29,6 +29,7 @@ typedef struct usr_md
 #define		HELP_CMD	"help"
 #define		MESG_CMD	"mesg"
 #define		DEBUG_CMD	"debug"
+#define		HANDSK_CMD	"handsk"
 
 #define		REG_CMD_FLDS	4
 #define		LOGIN_CMD_FLDS	3
@@ -43,22 +44,24 @@ typedef struct usr_md
 #define		HELP_CMD_FLDS	1
 #define		DEBUG_CMD_FLDS	1
 #define		MESG_CMD_FLDS	3
+#define		HANDSK_CMD_FLDS 1
 
 
-#define		REG_C_USAGE		"reg <name> <passwd> <passwd> Í¨¹ıÓÃ»§ÃûºÍÃÜÂë×¢²áÓÃ»§¡£\n"
-#define		LIN_C_USAGE		"login <uid> <password>  ÓÃ»§µÇÂ¼¡£\n"
-#define		FLIST_C_USAGE	"flist ÁĞ³öËùÓĞµÄºÃÓÑÓÃ»§¡£\n"
-#define		FADD_C_USAGE	"add <uid> ¸ù¾İºÃÓÑidÌí¼ÓºÃÓÑ¡£\n"
-#define		FDEL_C_USAGE	"del <uid> ¸ù¾İºÃÓÑidÉ¾³ıºÃÓÑ¡£\n"
-#define		ALIST_C_USAGE	"alist ²éÑ¯ËùÓĞµÄÔÚÏßÓÃ»§¡£\n"
-#define		FSTAT_C_USAGE	"stat <uid> ²éÑ¯ºÃÓÑ×´Ì¬¡£\n"
-#define		CHAT_C_USAGE	"talk <uid> <msg> ·¢ËÍÏûÏ¢¸øºÃÓÑ¡£\n"
-#define		EXIT_C_USAGE	"exit ÓÃ»§ÍË³ö¡£\n"
-#define		HELP_C_USAGE	"help ´òÓ¡°ïÖúĞÅÏ¢¡£\n"
-#define		MESG_C_USAGE	"mesg <from> <to> ÏÔÊ¾´ÓformÓÃ»§µ½toÓÃ»§µÄÁÄÌì¼ÇÂ¼¡£\n"
-#define		DEBUG_C_USAGE	"debug ÏÔÊ¾µ±Ç°ÓÃ»§ĞÅÏ¢¡£\n"
+#define		REG_C_USAGE		"reg <name> <passwd> <passwd> é€šè¿‡ç”¨æˆ·åå’Œå¯†ç æ³¨å†Œç”¨æˆ·ã€‚\n"
+#define		LIN_C_USAGE		"login <uid> <password>  ç”¨æˆ·ç™»å½•ã€‚\n"
+#define		FLIST_C_USAGE	"flist åˆ—å‡ºæ‰€æœ‰çš„å¥½å‹ç”¨æˆ·ã€‚\n"
+#define		FADD_C_USAGE	"add <uid> æ ¹æ®å¥½å‹idæ·»åŠ å¥½å‹ã€‚\n"
+#define		FDEL_C_USAGE	"del <uid> æ ¹æ®å¥½å‹idåˆ é™¤å¥½å‹ã€‚\n"
+#define		ALIST_C_USAGE	"alist æŸ¥è¯¢æ‰€æœ‰çš„åœ¨çº¿ç”¨æˆ·ã€‚\n"
+#define		FSTAT_C_USAGE	"stat <uid> æŸ¥è¯¢å¥½å‹çŠ¶æ€ã€‚\n"
+#define		CHAT_C_USAGE	"talk <uid> <msg> å‘é€æ¶ˆæ¯ç»™å¥½å‹ã€‚\n"
+#define		EXIT_C_USAGE	"exit ç”¨æˆ·é€€å‡ºã€‚\n"
+#define		HELP_C_USAGE	"help æ‰“å°å¸®åŠ©ä¿¡æ¯ã€‚\n"
+#define		MESG_C_USAGE	"mesg <from> <to> æ˜¾ç¤ºä»formç”¨æˆ·åˆ°toç”¨æˆ·çš„èŠå¤©è®°å½•ã€‚\n"
+#define		DEBUG_C_USAGE	"debug æ˜¾ç¤ºå½“å‰ç”¨æˆ·ä¿¡æ¯ã€‚\n"
+#define		HANDSK_C_USAGE	"handsk ot handshack init setting...\n"
 
-#define		CLIENT_C_USAGE	"¿Í»§¶ËÁÄÌìÈí¼şÃüÁî°ïÖú(<>Îª±ØÑ¡²ÎÊı)£º\n"
+#define		CLIENT_C_USAGE	"å®¢æˆ·ç«¯èŠå¤©è½¯ä»¶å‘½ä»¤å¸®åŠ©(<>ä¸ºå¿…é€‰å‚æ•°)ï¼š\n"
 #define		CLIENT_USAGE		\
 			CLIENT_C_USAGE		\
 			REG_C_USAGE			\
@@ -76,8 +79,8 @@ typedef struct usr_md
 
 
 
-#define		INV_C_USAGE		"ÎŞ·¨½âÎöÊäÈëµÄÓÃ»§ÃüÁî\n\n"
-#define		INV_STST_USAGE	"ÇëÏÈµÇÂ¼¡£\n\n"
+#define		INV_C_USAGE		"æ— æ³•è§£æè¾“å…¥çš„ç”¨æˆ·å‘½ä»¤\n\n"
+#define		INV_STST_USAGE	"è¯·å…ˆç™»å½•ã€‚\n\n"
 
 extern USR_CMD all_cmnds[];
 
@@ -98,5 +101,8 @@ int help_cmd_proc(char *n_tok);
 int usr_cmd_process(char *buf);
 int debug_cmd_proc(char *n_tok);
 int usr_stat_check(char *token);
+
+int handsk_cmd_proc(char* n_tok);
+
 
 #endif // !CUSR_CMD_H

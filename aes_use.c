@@ -5,7 +5,7 @@
 
 */
 
-int main(void)
+int main1(void)//取消主函数去掉１即可
 {
     /*
      * Set up the key and iv. Do I need to say to not hard code these in a
