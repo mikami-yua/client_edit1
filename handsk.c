@@ -143,11 +143,43 @@ void ot_msg(char* irl_msg1,char * irl_msg2) {
 
 }
 
+void binarystring(char c)
+{
+	int i;
+	for (i = 0; i < 8; i++)
+	{
+		if (c & 0x80) putchar('1'); else putchar('0');
+		c <<= 1;
+	}
+}
+
+
+/*
+实现函数：
+对于一个128位的字符串，生成对应的128个0、1  在ot中这256个消息都属于真实信息，需要serv进行选择
+itoa(整型数据，目标字符串，进制)不能自动补0
+*/
+void string2bin(char *cc) {
+	char bin[129];//多一位放\0
+	memset(bin, 0, sizeof(bin));
+	for (int i = 0; i < strlen(cc); i++) {
+		char c = cc[i];
+		for (int j = 0; j < 8; j++) {
+			if (c & 0x80) bin[i * 8 + j] = '1';
+			else bin[i * 8 + j] = '0';
+			c <<= 1;
+		}
+	}
+	printf("bin:%s\nbinlen:%d", bin, strlen(bin));
+}
+
+
 int main() {
 	//main_loop();
-	char* irl_msg1 = "hello lili";//真实消息
+	char* irl_msg1 = "abcdefghijkl1234";//真实消息 显示的16实际长度是15 有\0占一位
 	char* irl_msg2 = "are you ok?";
-	ot_msg(irl_msg1,irl_msg2);
+	//ot_msg(irl_msg1,irl_msg2);
+	string2bin(irl_msg1);
 
 	system("pause");
 	return 0;
