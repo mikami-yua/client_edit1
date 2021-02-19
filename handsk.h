@@ -23,4 +23,6 @@
 
 #include"im_client.h"
 
+ot_msg(char* irl_msg1, char* irl_msg2);
+
 #endif // !HANDSK_H
