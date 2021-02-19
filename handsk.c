@@ -158,6 +158,12 @@ void binarystring(char c)
 实现函数：
 对于一个128位的字符串，生成对应的128个0、1  在ot中这256个消息都属于真实信息，需要serv进行选择
 itoa(整型数据，目标字符串，进制)不能自动补0
+
+
+这个函数应该在serv端，serv端根据rule生成的01，输入01
+
+大ot函数，每次输入128个0、1
+client端每次输入256个随机串对应这些0.1
 */
 void string2bin(char *cc) {
 	char bin[129];//多一位放\0
