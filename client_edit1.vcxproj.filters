@@ -54,6 +54,9 @@
     <ClCompile Include="handsk.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="vector.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="client_config.h">
@@ -89,9 +92,6 @@
     <ClInclude Include="msg_type.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="aes.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="ot.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -99,6 +99,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="handsk.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="vector.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="aes_use.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
