@@ -234,8 +234,8 @@ void generate_r(char *random_r) {
 
 直接生成时间太长了，不可行，随机生成127组，最后一组匹配
 */
-void generate_r_vector(char *random_r) {
-	BIGNUM* vector[128];
+void generate_r_vector(char (*r_vector)[17],char *random_r) {
+	BIGNUM* vector[127];
 	char r_v[128][17];
 	char flag[17];//判断是否一致
 	memset(flag, 0, sizeof(flag));
@@ -248,25 +248,28 @@ void generate_r_vector(char *random_r) {
 		memset(r_v[i], 0, sizeof(r_v[i]));
 		BN_bn2bin(vector[i], r_v[i]);
 	}
-	do {//不行的话，最后一组直接异或出来，不使用BIGNUM   直接异或吧，使用随机生成需要2^128次计算
-		
-		vector[127] = BN_new();
-		BN_rand(vector[127], bits, top, bottom);
-		memset(r_v[127], 0, sizeof(r_v[127]));
-		BN_bn2bin(vector[127], r_v[127]);
-		
-		//printf("get one!\n");
-		for (int i = 0; i < 128; i++) {
-			for (int j = 0; j < 16; j++) {
-				flag[j] = flag[j] ^ r_v[i][j];
-			}
+	memset(r_v[127], 0, sizeof(r_v[127]));
+	for (int i = 0; i < 127; i++) {
+		for (int j = 0; j < 16; j++) {
+			flag[j] = flag[j] ^ r_v[i][j];
 		}
-	} while (strcmp(flag,random_r)!=0);
-	printf("%s\n",flag);
-	printf("%d\n", strcmp(flag, random_r));
-	printf("get vector!\n");
+	}
+	for (int i = 0; i < 16; i++) {
+		r_v[127][i] = flag[i] ^ random_r[i];
+	}
+	/*char ans[17];
+	memset(ans, 0, sizeof(ans));
+	for (int i = 0; i < 128; i++) {
+		for (int j = 0; j < 16; j++) {
+			ans[j] = ans[j] ^ r_v[i][j];
+		}
+	}
+	printf("===%s\n", ans);*/
+	
+	for (int i = 0; i < 128; i++) {
+		memcpy(r_vector[i], r_v[i], 17);//逐字节拷贝解决问题strcpy会出现问题，原因未知
+	}
 }
-
 
 
 int main() {
@@ -278,9 +281,19 @@ int main() {
 	char random[17];
 	memset(random, 0, sizeof(random));
 	generate_r(random);
-	generate_r_vector(random);
-
-
+	char r_v[128][17];
+	memset(r_v, 0, sizeof(r_v));
+	generate_r_vector(r_v,random);
+	
+	char ans[17];
+	memset(ans, 0, sizeof(ans));
+	for (int i = 0; i < 128; i++) {
+		for (int j = 0; j < 16; j++) {
+			ans[j] = ans[j] ^ r_v[i][j];
+		}
+	}
+	printf("%s\n", ans);
+	printf("%d\n", strcmp(ans, random));
 	system("pause");
 	return 0;
 }
