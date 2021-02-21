@@ -204,8 +204,14 @@ void generate_r(char *random_r) {
 	char show2[17];
 	memset(show2, 0, sizeof(show2));
 	BN_bn2bin(rnd, show2);
-	printf("%s\n", show2);//嶏_Mg菕gZOQd ~"_
-	printf("%d\n", strlen(show2));//16
+	while (strlen(show2) != 16)
+	{
+		BN_rand(rnd, bits, top, bottom);
+		memset(show2, 0, sizeof(show2));
+		BN_bn2bin(rnd, show2);
+	}
+	//printf("%s\n", show2);//嶏_Mg菕gZOQd ~"_
+	//printf("%d\n", strlen(show2));//16
 	strcpy(random_r, show2);
 	/*
 	每个char都异或一个char-------------------代码块测试可行，用char*保存生成的01串即可
@@ -272,19 +278,95 @@ void generate_r_vector(char (*r_vector)[17],char *random_r) {
 }
 
 
+
+
+/*
+产生连接key数字的函数，输入ip，产生128对key,都存放在一个结构体中HAND_KEY
+*/
+void generate_key_array(HAND_KEY *key,char *ipadd) {//这里的key就是外面真实的key，不需要copy即可传值
+	key->ipaddr = ipadd;
+	char a1[17], a2[17];
+	//生成128对 17 长的随机串
+	for (int i = 0; i < 128; i++) {
+		memset(a1, 0, sizeof(a1));
+		memset(a2, 0, sizeof(a2));
+		
+		generate_r(a1);
+		generate_r(a2);
+		
+		memcpy(key->key_array[i][0], a1, sizeof(a1));
+		memcpy(key->key_array[i][1], a2, sizeof(a2));
+	}
+
+}
+
+
 int main() {
 	//main_loop();
 	char* irl_msg1 = "abcdefghijkl1234";//真实消息 显示的16实际长度是15 有\0占一位
 	char* irl_msg2 = "are you ok?";
 	//ot_msg(irl_msg1,irl_msg2);
 	//string2bin(irl_msg1);
-	char random[17];
-	memset(random, 0, sizeof(random));
-	generate_r(random);
-	char r_v[128][17];
-	memset(r_v, 0, sizeof(r_v));
-	generate_r_vector(r_v,random);
+
+	//char random[17];
+	//memset(random, 0, sizeof(random));
+	//generate_r(random);
+	//char r_v[128][17];
+	//memset(r_v, 0, sizeof(r_v));
+	//generate_r_vector(r_v,random);
+	/*
+	//char ans[17];test
+	//memset(ans, 0, sizeof(ans));
+	//for (int i = 0; i < 128; i++) {
+	//	for (int j = 0; j < 16; j++) {
+	//		ans[j] = ans[j] ^ r_v[i][j];
+	//	}
+	//}
+	//printf("%s\n", ans);
+	//printf("%d\n", strcmp(ans, random));
+	*/
+
+	HAND_KEY handkey;
+	char* ipadd = "123.12.3.4";
+	generate_key_array(&handkey, ipadd);//可以直接得到
 	
+	
+
+	system("pause");
+	return 0;
+}
+
+
+/// <summary>
+/// stackoverflow的问题展示
+/// </summary>
+/// <returns></returns>
+int main2() {
+	char* random_r="1234567891234567";//长度16 算上'\0'17
+	char r_vector[128][17];
+	BIGNUM* vector[127];
+	char r_v[128][17];
+	char flag[17];//判断是否一致
+	memset(flag, 0, sizeof(flag));
+	int bits = 128;
+	int top = 0;
+	int bottom = 0;
+	for (int i = 0; i < 127; i++) {
+		vector[i] = BN_new();
+		BN_rand(vector[i], bits, top, bottom);
+		memset(r_v[i], 0, sizeof(r_v[i]));
+		BN_bn2bin(vector[i], r_v[i]);
+	}
+	memset(r_v[127], 0, sizeof(r_v[127]));
+	for (int i = 0; i < 127; i++) {
+		for (int j = 0; j < 16; j++) {
+			flag[j] = flag[j] ^ r_v[i][j];
+		}
+	}
+	for (int i = 0; i < 16; i++) {
+		r_v[127][i] = flag[i] ^ random_r[i];
+	}
+	//至此生成了128个向量，这些向量的异或之和正好是random_r的值，ans可以验证这个结论
 	char ans[17];
 	memset(ans, 0, sizeof(ans));
 	for (int i = 0; i < 128; i++) {
@@ -292,8 +374,37 @@ int main() {
 			ans[j] = ans[j] ^ r_v[i][j];
 		}
 	}
-	printf("%s\n", ans);
-	printf("%d\n", strcmp(ans, random));
+	printf("the target XOR result is:%s\n", ans);//
+	//下面使用memcpy的形式拷贝并求异或值
+	for (int i = 0; i < 128; i++) {
+		memcpy(r_vector[i], r_v[i], 17);//逐字节拷贝解决问题strcpy会出现问题，原因未知
+	}
+	memset(ans, 0, sizeof(ans));
+	for (int i = 0; i < 128; i++) {
+		for (int j = 0; j < 16; j++) {
+			ans[j] = ans[j] ^ r_vector[i][j];
+		}
+	}
+	printf("using memcpy copying and the result is:%s\n", ans);//这是正确的结果
+	
+	
+	memset(r_vector, 0, sizeof(r_vector));
+	for (int i = 0; i < 128; i++) {
+		strcpy(r_vector[i], r_v[i]);//strcpy会出现问题，原因未知
+	}
+	memset(ans, 0, sizeof(ans));
+	for (int i = 0; i < 128; i++) {
+		for (int j = 0; j < 16; j++) {
+			ans[j] = ans[j] ^ r_vector[i][j];
+		}
+	}
+	printf("using strcpy copying and the result is:%s\n", ans);
+	int err_count = 0;
+	for (int i = 0; i < 128; i++) {
+		if (strcmp(r_vector[i], r_v[i]) != 0) err_count++;
+	}
+	printf("after using strcpy() each vector using strcmp() with orignal r_v,the different vector nums:%d\n", err_count);
+
 	system("pause");
 	return 0;
 }

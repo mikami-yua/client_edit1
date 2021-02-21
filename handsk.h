@@ -23,6 +23,11 @@
 
 #include"im_client.h"
 
+typedef struct handsk_key {
+	char* ipaddr;//连接服务器时由client提供serv的ip，这里提前判断以下是否已有即可
+	char key_array[128][2][17];//128对，每对两个，每个128bit 16个char长
+}HAND_KEY;
+
 void ot_msg(char* irl_msg1, char* irl_msg2);
 
 #endif // !HANDSK_H
