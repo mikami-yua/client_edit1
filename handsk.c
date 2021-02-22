@@ -56,16 +56,9 @@ void main_loop() {
 }
 
 /*
-一个函数进行ot-----ot函数的入口应该是两个随机的字符串，没有出口，出口在serv端
-发送的参数在一个结构体中，接收的数据也在一个结构体中
-在一个结构体中开销小，实现时需要解决：1.buff的长度问题，buff中使用分隔符分割各个位的问题
-
-需要提供参数：真实消息1，真实消息2.什么都不得到
+函数连接服务器，简化所有使用socket的函数
 */
-void ot_msg(char* irl_msg1,char * irl_msg2) {
-	//char* irl_msg1 = "hello lili";//真实消息
-	//char* irl_msg2 = "are you ok?";
-
+void socket_conn() {
 	//1.请求协议版本
 	WSADATA wsaDATA;
 	WSAStartup(MAKEWORD(2, 2), &wsaDATA);
@@ -88,11 +81,33 @@ void ot_msg(char* irl_msg1,char * irl_msg2) {
 	addr.sin_port = htons(10086);//端口65536  10000左右的
 
 	//4.连接服务器
-	int r = connect(clientSOCKET, (struct sockaddr*)&addr, sizeof(addr));
+	int r = connect(clientSOCKET, (struct sockaddr*)&addr, sizeof(addr));//addr就是服务器的地址族
 	if (-1 == r) {
 		printf("connect error\n");
 		return -1;
 	}
+}
+
+/*
+socket 清理函数
+*/
+void socket_clean() {
+	closesocket(clientSOCKET);
+	WSACleanup();
+}
+
+/*
+一个函数进行ot-----ot函数的入口应该是两个随机的字符串，没有出口，出口在serv端
+发送的参数在一个结构体中，接收的数据也在一个结构体中
+在一个结构体中开销小，实现时需要解决：1.buff的长度问题，buff中使用分隔符分割各个位的问题
+
+需要提供参数：真实消息1，真实消息2.什么都不得到
+*/
+void ot_msg(char* irl_msg1,char * irl_msg2) {
+	//char* irl_msg1 = "hello lili";//真实消息
+	//char* irl_msg2 = "are you ok?";
+
+	int r;
 	char send1[1024];//包装ot第一次传送的buff
 	memset(send1, 0, sizeof(send1));
 
@@ -135,12 +150,7 @@ void ot_msg(char* irl_msg1,char * irl_msg2) {
 	strcat(send2, "/");
 	strcat(send2, enmsg2);
 	send(clientSOCKET, send2, strlen(send2), NULL);
-
-	
-	WSACleanup();
-
 	//【问题】：问什么需要debug两次，exe文件才会更新。猜测：和工程的组织方式有关
-
 }
 
 void binarystring(char c)
@@ -179,12 +189,6 @@ void string2bin(char *cc) {
 	printf("bin:%s\nbinlen:%d", bin, strlen(bin));
 }
 
-
-/*
-根据aes的key生成128对，每对有两个长度为128的随机字符串-----原始密钥数组
-生成各个分量不同异或结果相同的r（128bit）128个分量（随机数）
-生成128bit的随机数r，
-*/
 
 
 /*
@@ -282,6 +286,8 @@ void generate_r_vector(char (*r_vector)[17],char *random_r) {
 
 /*
 产生连接key数字的函数，输入ip，产生128对key,都存放在一个结构体中HAND_KEY
+@key:返回的带有ip和key_array的结构体
+@ipadd：输入的ip地址
 */
 void generate_key_array(HAND_KEY *key,char *ipadd) {//这里的key就是外面真实的key，不需要copy即可传值
 	key->ipaddr = ipadd;
@@ -300,9 +306,29 @@ void generate_key_array(HAND_KEY *key,char *ipadd) {//这里的key就是外面�
 
 }
 
+/*
+进行128次 每次两个128bit字符串的 ot
+现在已有的ot可以进行一次2选1，黄的论文：128次每次得到128bit字符串的ot
+需要进行128次ot
+可能存在问题：上次ot没有结束，就开始进行下一次ot了
 
-int main() {
+把128组char* 数组放在ot_msg中，另一边接收128个
+
+
+两个参数：真实消息向量1，真实消息向量2
+*/
+void ot_128_send(char (*irl_megs1)[17], char(*irl_megs2)[17]) {
+	for (int i = 0; i < 128; i++) {
+		ot_msg(irl_megs1[i], irl_megs2[i]);
+	}
+}
+
+
+
+int main() {//socket的设置函数独立出来（至少在解决128ot之后再考虑这个问题）
 	//main_loop();
+	socket_conn();
+	printf("service readlly!\n");
 	char* irl_msg1 = "abcdefghijkl1234";//真实消息 显示的16实际长度是15 有\0占一位
 	char* irl_msg2 = "are you ok?";
 	//ot_msg(irl_msg1,irl_msg2);
@@ -326,87 +352,50 @@ int main() {
 	//printf("%d\n", strcmp(ans, random));
 	*/
 
-	HAND_KEY handkey;
-	char* ipadd = "123.12.3.4";
-	generate_key_array(&handkey, ipadd);//可以直接得到
+	//HAND_KEY handkey;
+	//char* ipadd = "123.12.3.4";
+	//generate_key_array(&handkey, ipadd);//可以直接得到
 	
+	char random[17];
+	memset(random, 0, sizeof(random));
+	generate_r(random);
+	char r_v1[128][17];
+	memset(r_v1, 0, sizeof(r_v1));
+	generate_r_vector(r_v1,random);//生成了一组
+	char r_v2[128][17];
+	memset(r_v2, 0, sizeof(r_v2));
+	generate_r_vector(r_v2, random);//生成了一组
+	//生成第二组 client在本地测试生成的两组是否能异或成目标值
 	
-
-	system("pause");
-	return 0;
-}
-
-
-/// <summary>
-/// stackoverflow的问题展示
-/// </summary>
-/// <returns></returns>
-int main2() {
-	char* random_r="1234567891234567";//长度16 算上'\0'17
-	char r_vector[128][17];
-	BIGNUM* vector[127];
-	char r_v[128][17];
-	char flag[17];//判断是否一致
-	memset(flag, 0, sizeof(flag));
-	int bits = 128;
-	int top = 0;
-	int bottom = 0;
-	for (int i = 0; i < 127; i++) {
-		vector[i] = BN_new();
-		BN_rand(vector[i], bits, top, bottom);
-		memset(r_v[i], 0, sizeof(r_v[i]));
-		BN_bn2bin(vector[i], r_v[i]);
-	}
-	memset(r_v[127], 0, sizeof(r_v[127]));
-	for (int i = 0; i < 127; i++) {
-		for (int j = 0; j < 16; j++) {
-			flag[j] = flag[j] ^ r_v[i][j];
-		}
-	}
-	for (int i = 0; i < 16; i++) {
-		r_v[127][i] = flag[i] ^ random_r[i];
-	}
-	//至此生成了128个向量，这些向量的异或之和正好是random_r的值，ans可以验证这个结论
 	char ans[17];
 	memset(ans, 0, sizeof(ans));
 	for (int i = 0; i < 128; i++) {
 		for (int j = 0; j < 16; j++) {
-			ans[j] = ans[j] ^ r_v[i][j];
+			ans[j] = ans[j] ^ r_v1[i][j];
 		}
 	}
-	printf("the target XOR result is:%s\n", ans);//
-	//下面使用memcpy的形式拷贝并求异或值
-	for (int i = 0; i < 128; i++) {
-		memcpy(r_vector[i], r_v[i], 17);//逐字节拷贝解决问题strcpy会出现问题，原因未知
-	}
+	printf("%s\n", ans);
+	printf("ans:%d\n", strcmp(ans, random));
+	/*
 	memset(ans, 0, sizeof(ans));
 	for (int i = 0; i < 128; i++) {
 		for (int j = 0; j < 16; j++) {
-			ans[j] = ans[j] ^ r_vector[i][j];
+			ans[j] = ans[j] ^ r_v2[i][j];
 		}
 	}
-	printf("using memcpy copying and the result is:%s\n", ans);//这是正确的结果
-	
-	
-	memset(r_vector, 0, sizeof(r_vector));
-	for (int i = 0; i < 128; i++) {
-		strcpy(r_vector[i], r_v[i]);//strcpy会出现问题，原因未知
-	}
-	memset(ans, 0, sizeof(ans));
-	for (int i = 0; i < 128; i++) {
-		for (int j = 0; j < 16; j++) {
-			ans[j] = ans[j] ^ r_vector[i][j];
-		}
-	}
-	printf("using strcpy copying and the result is:%s\n", ans);
-	int err_count = 0;
-	for (int i = 0; i < 128; i++) {
-		if (strcmp(r_vector[i], r_v[i]) != 0) err_count++;
-	}
-	printf("after using strcpy() each vector using strcmp() with orignal r_v,the different vector nums:%d\n", err_count);
+	printf("%s\n", ans);
+	printf("%d\n", strcmp(ans, random));
+	*/
+	//使用ot发送
+	ot_128_send(r_v1, r_v2);
 
+
+	socket_clean();
 	system("pause");
 	return 0;
 }
+
+
+
 
 //78min

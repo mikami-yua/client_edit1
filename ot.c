@@ -259,8 +259,8 @@ int ot_encode_msg(char *en_msg1,char* en_msg2,char *k1,char *k2,char *msg1,char 
 	for (int i = 0; i < len2; i++) {
 		ans2[i] = msg2[i]+k2[i];
 	}
-	strcpy(en_msg1, ans1);
-	strcpy(en_msg2, ans2);
+	memcpy(en_msg1, ans1,sizeof(ans1));
+	memcpy(en_msg2, ans2,sizeof(ans1));
 	//枡晻灊洘洖灎Γ
 	//¨ⅸぇ
 }
@@ -291,8 +291,8 @@ int ot_decode_msg(char *de_msg1,char *de_msg2,char *en_msg1,char* en_msg2,char *
 	for (int i = 0; i < len2; i++) {
 		ans2[i] = en_msg2[i] - k[i];
 	}
-	strcpy(de_msg1, ans1);
-	strcpy(de_msg2, ans2);
+	memcpy(de_msg1, ans1,sizeof(ans1));
+	memcpy(de_msg2, ans2,sizeof(ans2));
 }
 
 
