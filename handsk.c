@@ -1,6 +1,10 @@
 #include"handsk.h"
 #include"ot.h"
+#include <time.h>
 SOCKET clientSOCKET;//全局的socket
+
+int random_unique = 11;
+
 void get_msg() {
 	char recv_buff[1024];
 	int r;
@@ -53,6 +57,30 @@ void main_loop() {
 		scanf("%s", buff);
 		r = send(clientSOCKET, buff, strlen(buff), NULL);
 	}
+}
+
+
+void get_random_str(char* random_str, const int random_len)
+{
+	srand(time(NULL)+random_unique);
+	int i;
+	for (i = 0; i < random_len; ++i)
+	{
+		switch ((rand() % 3))
+		{
+		case 1:
+			random_str[i] = 'A' + rand() % 26;
+			break;
+		case 2:
+			random_str[i] = 'a' + rand() % 26;
+			break;
+		default:
+			random_str[i] = '0' + rand() % 10;
+			break;
+		}
+	}
+	random_str[random_len] = '\0';
+	random_unique++;
 }
 
 /*
@@ -128,12 +156,12 @@ void ot_msg(char* irl_msg1,char * irl_msg2) {
 	strcat(send1, "/");
 	strcat(send1, msg_r2);
 	r = send(clientSOCKET, send1, strlen(send1), NULL);
-	printf("%s\n", send1);
+	//printf("%s\n", send1);
 	//接收v
 	char v[100];
 	memset(v, 0, sizeof(v));
 	recv(clientSOCKET, v, 99, NULL);
-	printf("v:%s\n", v);
+	//printf("v:%s\n", v);
 	char k1[100];
 	char k2[100];
 	ot_compute_ki_msg(k1, k2, v, msg_r1, msg_r2, dd, nn);
@@ -146,6 +174,12 @@ void ot_msg(char* irl_msg1,char * irl_msg2) {
 	//把两个真实消息发送给serv
 	char send2[1024];
 	memset(send2, 0, sizeof(send2));
+
+	//真实消息含有\0，需要手动拷贝
+	
+	printf("%s\n", enmsg1);
+	printf("%s\n", enmsg2);
+
 	strcat(send2, enmsg1);
 	strcat(send2, "/");
 	strcat(send2, enmsg2);
@@ -198,43 +232,45 @@ void string2bin(char *cc) {
 只要char是满的，不是aecii码式的填充，就能直接异或
 */
 void generate_r(char *random_r) {
-	BIGNUM* rnd;
-	rnd = BN_new();
-	//BN_random
-	int bits = 128;
-	int top = 0;
-	int bottom = 0;
-	BN_rand(rnd, bits, top, bottom);
-	char show2[17];
-	memset(show2, 0, sizeof(show2));
-	BN_bn2bin(rnd, show2);
-	while (strlen(show2) != 16)
-	{
-		BN_rand(rnd, bits, top, bottom);
-		memset(show2, 0, sizeof(show2));
-		BN_bn2bin(rnd, show2);
-	}
-	//printf("%s\n", show2);//嶏_Mg菕gZOQd ~"_
-	//printf("%d\n", strlen(show2));//16
-	strcpy(random_r, show2);
-	/*
-	每个char都异或一个char-------------------代码块测试可行，用char*保存生成的01串即可
-	
-	char* irl_msg1 = "abcdefghijkl1234";
-	char buf[17];
-	memset(buf, 0, sizeof(buf));
-	for (int i = 0; i < 16; i++) {
-		buf[i] = irl_msg1[i] ^ show2[i];
-	}
-	printf("%s\n",buf);
-	char ans[17];
-	memset(ans, 0, sizeof(ans));
-	for (int i = 0; i < 16; i++) {
-		ans[i] = buf[i] ^ show2[i];
-	}
-	printf("%s\n", ans);
-	*/
-	BN_free(rnd);//而是每4位组成一个十进制数储存在to中
+	//BIGNUM* rnd;
+	//rnd = BN_new();
+	////BN_random
+	//int bits = 128;
+	//int top = 0;
+	//int bottom = 0;
+	//BN_rand(rnd, bits, top, bottom);
+	//char show2[17];
+	//memset(show2, 0, sizeof(show2));
+	//BN_bn2bin(rnd, show2);
+	//while (strlen(show2) != 16)
+	//{
+	//	BN_rand(rnd, bits, top, bottom);
+	//	memset(show2, 0, sizeof(show2));
+	//	BN_bn2bin(rnd, show2);
+	//}
+	////printf("%s\n", show2);//嶏_Mg菕gZOQd ~"_
+	////printf("%d\n", strlen(show2));//16
+	//strcpy(random_r, show2);
+	///*
+	//每个char都异或一个char-------------------代码块测试可行，用char*保存生成的01串即可
+	//
+	//char* irl_msg1 = "abcdefghijkl1234";
+	//char buf[17];
+	//memset(buf, 0, sizeof(buf));
+	//for (int i = 0; i < 16; i++) {
+	//	buf[i] = irl_msg1[i] ^ show2[i];
+	//}
+	//printf("%s\n",buf);
+	//char ans[17];
+	//memset(ans, 0, sizeof(ans));
+	//for (int i = 0; i < 16; i++) {
+	//	ans[i] = buf[i] ^ show2[i];
+	//}
+	//printf("%s\n", ans);
+	//*/
+	//BN_free(rnd);//而是每4位组成一个十进制数储存在to中
+
+	get_random_str(random_r, 16);
 }
 
 /*
@@ -245,39 +281,52 @@ void generate_r(char *random_r) {
 直接生成时间太长了，不可行，随机生成127组，最后一组匹配
 */
 void generate_r_vector(char (*r_vector)[17],char *random_r) {
-	BIGNUM* vector[127];
-	char r_v[128][17];
+	//BIGNUM* vector[127];
+	//char r_v[128][17];
+	//char flag[17];//判断是否一致
+	//memset(flag, 0, sizeof(flag));
+	//int bits = 128;
+	//int top = 0;
+	//int bottom = 0;
+	//for (int i = 0; i < 127; i++) {
+	//	vector[i] = BN_new();
+	//	BN_rand(vector[i], bits, top, bottom);
+	//	memset(r_v[i], 0, sizeof(r_v[i]));
+	//	BN_bn2bin(vector[i], r_v[i]);
+	//}
+	//memset(r_v[127], 0, sizeof(r_v[127]));
+	//for (int i = 0; i < 127; i++) {
+	//	for (int j = 0; j < 16; j++) {
+	//		flag[j] = flag[j] ^ r_v[i][j];
+	//	}
+	//}
+	//for (int i = 0; i < 16; i++) {
+	//	r_v[127][i] = flag[i] ^ random_r[i];
+	//}
+	///*char ans[17];
+	//memset(ans, 0, sizeof(ans));
+	//for (int i = 0; i < 128; i++) {
+	//	for (int j = 0; j < 16; j++) {
+	//		ans[j] = ans[j] ^ r_v[i][j];
+	//	}
+	//}
+	//printf("===%s\n", ans);*/
+	//
+	//for (int i = 0; i < 128; i++) {
+	//	memcpy(r_vector[i], r_v[i], 17);//逐字节拷贝解决问题strcpy会出现问题，原因未知
+	//}
 	char flag[17];//判断是否一致
 	memset(flag, 0, sizeof(flag));
-	int bits = 128;
-	int top = 0;
-	int bottom = 0;
 	for (int i = 0; i < 127; i++) {
-		vector[i] = BN_new();
-		BN_rand(vector[i], bits, top, bottom);
-		memset(r_v[i], 0, sizeof(r_v[i]));
-		BN_bn2bin(vector[i], r_v[i]);
+		get_random_str(r_vector[i], 16);
 	}
-	memset(r_v[127], 0, sizeof(r_v[127]));
 	for (int i = 0; i < 127; i++) {
 		for (int j = 0; j < 16; j++) {
-			flag[j] = flag[j] ^ r_v[i][j];
+			flag[j] = flag[j] ^ r_vector[i][j];
 		}
 	}
 	for (int i = 0; i < 16; i++) {
-		r_v[127][i] = flag[i] ^ random_r[i];
-	}
-	/*char ans[17];
-	memset(ans, 0, sizeof(ans));
-	for (int i = 0; i < 128; i++) {
-		for (int j = 0; j < 16; j++) {
-			ans[j] = ans[j] ^ r_v[i][j];
-		}
-	}
-	printf("===%s\n", ans);*/
-	
-	for (int i = 0; i < 128; i++) {
-		memcpy(r_vector[i], r_v[i], 17);//逐字节拷贝解决问题strcpy会出现问题，原因未知
+		r_vector[127][i] = flag[i] ^ random_r[i];
 	}
 }
 
@@ -303,7 +352,6 @@ void generate_key_array(HAND_KEY *key,char *ipadd) {//这里的key就是外面�
 		memcpy(key->key_array[i][0], a1, sizeof(a1));
 		memcpy(key->key_array[i][1], a2, sizeof(a2));
 	}
-
 }
 
 /*
@@ -318,7 +366,18 @@ void generate_key_array(HAND_KEY *key,char *ipadd) {//这里的key就是外面�
 两个参数：真实消息向量1，真实消息向量2
 */
 void ot_128_send(char (*irl_megs1)[17], char(*irl_megs2)[17]) {
+	char buf1[17], buf2[17];
 	for (int i = 0; i < 128; i++) {
+		//memset(buf1, 0, sizeof(buf1));
+		//memset(buf2, 0, sizeof(buf2));
+		//memcpy(buf1, irl_megs1[i], 17);
+		//memcpy(buf2, irl_megs2[i], 17);
+		printf("%d\n", i);
+		printf("%s\n", irl_megs1[i]);
+		printf("%s\n", irl_megs2[i]);
+		//printf("%s\n", buf1);
+		//printf("%s\n", buf2);
+		printf("\n");
 		ot_msg(irl_megs1[i], irl_megs2[i]);
 	}
 }
@@ -327,6 +386,7 @@ void ot_128_send(char (*irl_megs1)[17], char(*irl_megs2)[17]) {
 
 int main() {//socket的设置函数独立出来（至少在解决128ot之后再考虑这个问题）
 	//main_loop();
+	
 	socket_conn();
 	printf("service readlly!\n");
 	char* irl_msg1 = "abcdefghijkl1234";//真实消息 显示的16实际长度是15 有\0占一位
@@ -352,13 +412,23 @@ int main() {//socket的设置函数独立出来（至少在解决128ot之后再�
 	//printf("%d\n", strcmp(ans, random));
 	*/
 
-	//HAND_KEY handkey;
-	//char* ipadd = "123.12.3.4";
-	//generate_key_array(&handkey, ipadd);//可以直接得到
+	HAND_KEY handkey;
+	char* ipadd = "123.12.3.4";
+	generate_key_array(&handkey, ipadd);//可以直接得到
 	
+	/*验证生成的随机密钥数组
+	for (int i = 0; i < 128; i++) {
+		printf("%s\n", handkey.key_array[i][0]);
+		printf("%s\n", handkey.key_array[i][1]);
+		printf("\n");
+	}
+	*/
+
+
 	char random[17];
 	memset(random, 0, sizeof(random));
 	generate_r(random);
+	printf("random:%s\n", random);
 	char r_v1[128][17];
 	memset(r_v1, 0, sizeof(r_v1));
 	generate_r_vector(r_v1,random);//生成了一组
@@ -366,7 +436,8 @@ int main() {//socket的设置函数独立出来（至少在解决128ot之后再�
 	memset(r_v2, 0, sizeof(r_v2));
 	generate_r_vector(r_v2, random);//生成了一组
 	//生成第二组 client在本地测试生成的两组是否能异或成目标值
-	
+
+	/*验证生成128个随机向量能否异或成一个
 	char ans[17];
 	memset(ans, 0, sizeof(ans));
 	for (int i = 0; i < 128; i++) {
@@ -376,7 +447,7 @@ int main() {//socket的设置函数独立出来（至少在解决128ot之后再�
 	}
 	printf("%s\n", ans);
 	printf("ans:%d\n", strcmp(ans, random));
-	/*
+
 	memset(ans, 0, sizeof(ans));
 	for (int i = 0; i < 128; i++) {
 		for (int j = 0; j < 16; j++) {
@@ -387,7 +458,7 @@ int main() {//socket的设置函数独立出来（至少在解决128ot之后再�
 	printf("%d\n", strcmp(ans, random));
 	*/
 	//使用ot发送
-	ot_128_send(r_v1, r_v2);
+	//ot_128_send(r_v1, r_v2);
 
 
 	socket_clean();

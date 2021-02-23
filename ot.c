@@ -25,16 +25,16 @@ int ot_send_rsa_msg(char *get_n,char *get_e,char *get_d) {
 	BN_generate_prime(q, 50, NULL, NULL, NULL, NULL, NULL);//产生一个素数，赋给q
 
 	ch_p = BN_bn2dec(p);//将BIGNUM类型转换为char *，再转换为CString，输出到界面
-	printf("%s\n", ch_p);
+	//printf("%s\n", ch_p);
 
 	ch_q = BN_bn2dec(q);//同上
-	printf("%s\n", ch_q);
+	//printf("%s\n", ch_q);
 
 	BN_mul(N, p, q, ctx);//N=p*q
 
 
 	ch_N = BN_bn2dec(N);
-	printf("n:%s\n", ch_N);
+	//printf("n:%s\n", ch_N);
 	strcpy(get_n, ch_N);
 
 	BN_sub(pp, p, one);//pp = p -1
@@ -52,7 +52,7 @@ int ot_send_rsa_msg(char *get_n,char *get_e,char *get_d) {
 	}
 
 	ch_e = BN_bn2dec(e);
-	printf("e:%s\n", ch_e);
+	//printf("e:%s\n", ch_e);
 	strcpy(get_e, ch_e);
 
 	//求d
@@ -61,7 +61,7 @@ int ot_send_rsa_msg(char *get_n,char *get_e,char *get_d) {
 	d = BN_new();
 	BN_mod_inverse(d, e, mul_ppqq, ctx);
 	ch_d = BN_bn2dec(d);
-	printf("d:%s\n", ch_d);
+	//printf("d:%s\n", ch_d);
 	strcpy(get_d, ch_d);
 	BN_CTX_free(ctx);//上下文
 }
@@ -239,8 +239,8 @@ int ot_encode_msg(char *en_msg1,char* en_msg2,char *k1,char *k2,char *msg1,char 
 	//char* msg2 = "opqrstuvwxyz";
 	//printf("ascii code %c\n", msg1[1]+1);//char可以直接加减1
 	//printf("strlen() function %d\n", strlen(msg1));//strlen函数可以获得真实长度
-	int len1 = strlen(msg1);
-	int len2 = strlen(msg2);
+	//int len1 = strlen(msg1);
+	//int len2 = strlen(msg2);
 	//char* k1, * k2;
 	/*
 	******************************compute ki******************************
@@ -253,10 +253,10 @@ int ot_encode_msg(char *en_msg1,char* en_msg2,char *k1,char *k2,char *msg1,char 
 	char ans2[100];
 	memset(ans1, 0, sizeof(ans1));
 	memset(ans2, 0, sizeof(ans2));
-	for (int i = 0; i < len1; i++) {
+	for (int i = 0; i < 16; i++) {
 		ans1[i] = msg1[i]+k1[i];
 	}
-	for (int i = 0; i < len2; i++) {
+	for (int i = 0; i < 16; i++) {
 		ans2[i] = msg2[i]+k2[i];
 	}
 	memcpy(en_msg1, ans1,sizeof(ans1));
