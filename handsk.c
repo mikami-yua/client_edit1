@@ -161,6 +161,7 @@ void ot_msg(char* irl_msg1,char * irl_msg2) {
 	char v[100];
 	memset(v, 0, sizeof(v));
 	recv(clientSOCKET, v, 99, NULL);
+	printf("get rev:%s\n", v);
 	//printf("v:%s\n", v);
 	char k1[100];
 	char k2[100];
@@ -372,16 +373,28 @@ void ot_128_send(char (*irl_megs1)[17], char(*irl_megs2)[17]) {
 		//memset(buf2, 0, sizeof(buf2));
 		//memcpy(buf1, irl_megs1[i], 17);
 		//memcpy(buf2, irl_megs2[i], 17);
-		printf("%d\n", i);
-		printf("%s\n", irl_megs1[i]);
-		printf("%s\n", irl_megs2[i]);
+		//printf("%d\n", i);
+		//printf("%s\n", irl_megs1[i]);
+		//printf("%s\n", irl_megs2[i]);
 		//printf("%s\n", buf1);
 		//printf("%s\n", buf2);
-		printf("\n");
+		//printf("\n");
 		ot_msg(irl_megs1[i], irl_megs2[i]);
 	}
 }
 
+/*
+client端进行多少次128ot是由serv端确定的
+serv端根据rule的数量发送进行多少组ot的请求，serv端发送ot数量，client端接收到数量后进行ot，每个r都新生成k是不变的
+返回serv希望进行ot的次数
+*/
+int client_handsk_ot() {
+	int nums;
+	//memset(nums, 0, sizeof(nums));
+	recv(clientSOCKET,&nums, sizeof(nums), NULL);
+	printf("ot times:%d\n", nums);
+	return nums;
+}
 
 
 int main() {//socket的设置函数独立出来（至少在解决128ot之后再考虑这个问题）
@@ -412,10 +425,14 @@ int main() {//socket的设置函数独立出来（至少在解决128ot之后再�
 	//printf("%d\n", strcmp(ans, random));
 	*/
 
+	int loop_time=client_handsk_ot();
+
 	HAND_KEY handkey;
 	char* ipadd = "123.12.3.4";
 	generate_key_array(&handkey, ipadd);//可以直接得到
 	
+
+
 	/*验证生成的随机密钥数组
 	for (int i = 0; i < 128; i++) {
 		printf("%s\n", handkey.key_array[i][0]);
@@ -424,7 +441,7 @@ int main() {//socket的设置函数独立出来（至少在解决128ot之后再�
 	}
 	*/
 
-
+	/*128ot的基本步骤
 	char random[17];
 	memset(random, 0, sizeof(random));
 	generate_r(random);
@@ -436,6 +453,7 @@ int main() {//socket的设置函数独立出来（至少在解决128ot之后再�
 	memset(r_v2, 0, sizeof(r_v2));
 	generate_r_vector(r_v2, random);//生成了一组
 	//生成第二组 client在本地测试生成的两组是否能异或成目标值
+	*/
 
 	/*验证生成128个随机向量能否异或成一个
 	char ans[17];
@@ -459,10 +477,43 @@ int main() {//socket的设置函数独立出来（至少在解决128ot之后再�
 	*/
 	//使用ot发送
 	//ot_128_send(r_v1, r_v2);
-
+	
+	//测试多次128ot的可行性
+	/*
+	memset(random, 0, sizeof(random));
+	generate_r(random);
+	printf("random:%s\n", random);
+	memset(r_v1, 0, sizeof(r_v1));
+	generate_r_vector(r_v1, random);//生成了一组
+	memset(r_v2, 0, sizeof(r_v2));
+	generate_r_vector(r_v2, random);//生成了一组
+	ot_128_send(r_v1, r_v2);
+	*/
+	char random[17];
+	memset(random, 0, sizeof(random));
+	generate_r(random);
+	printf("random:%s\n", random);
+	char r_v1[128][17];
+	memset(r_v1, 0, sizeof(r_v1));
+	generate_r_vector(r_v1, random);//生成了一组
+	char r_v2[128][17];
+	memset(r_v2, 0, sizeof(r_v2));
+	generate_r_vector(r_v2, random);//生成了一组
+	for (int i = 0; i < loop_time; i++) {
+		memset(random, 0, sizeof(random));
+		generate_r(random);
+		printf("random:%s\n", random);
+		memset(r_v1, 0, sizeof(r_v1));
+		generate_r_vector(r_v1, random);//生成了一组
+		memset(r_v2, 0, sizeof(r_v2));
+		generate_r_vector(r_v2, random);//生成了一组
+		ot_128_send(r_v1, r_v2);
+		ot_128_send(r_v1, r_v2);
+	}
 
 	socket_clean();
 	system("pause");
+	
 	return 0;
 }
 
