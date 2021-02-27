@@ -32,6 +32,7 @@
     <ClCompile Include="list.c" />
     <ClCompile Include="msg_cipher.c" />
     <ClCompile Include="ot.c" />
+    <ClCompile Include="token.c" />
     <ClCompile Include="vector.c" />
   </ItemGroup>
   <ItemGroup>
@@ -50,6 +51,7 @@
     <ClInclude Include="aes_use.h" />
     <ClInclude Include="openssl_use.h" />
     <ClInclude Include="ot.h" />
+    <ClInclude Include="token.h" />
     <ClInclude Include="vector.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

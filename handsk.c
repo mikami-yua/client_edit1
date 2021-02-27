@@ -397,7 +397,7 @@ int client_handsk_ot() {
 }
 
 
-int main() {//socket的设置函数独立出来（至少在解决128ot之后再考虑这个问题）
+int main1() {//socket的设置函数独立出来（至少在解决128ot之后再考虑这个问题）
 	//main_loop();
 	
 	socket_conn();
