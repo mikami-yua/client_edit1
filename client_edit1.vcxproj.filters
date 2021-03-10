@@ -60,6 +60,9 @@
     <ClCompile Include="token.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="file_preproc.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="client_config.h">
@@ -111,6 +114,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="token.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="file_preproc.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

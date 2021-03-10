@@ -69,10 +69,10 @@ void get_random_table(int or_seed) {
 //把一个超长字符串（一段话）转换为token串
 
 
-int main() {
-	printf("hello world\n");
-    hash_compute();
-    get_random_table(11);
-	system("pause");
-	return 0;
-}
+//int main() {
+//	printf("hello world\n");
+//    hash_compute();
+//    get_random_table(11);
+//	system("pause");
+//	return 0;
+//}
