@@ -29,24 +29,23 @@ void rule_read(char *rule_path,char (*rule_set)[17]) {
 	printf("\n");
 }
 
-/*
-需要对不足16byte的字符串补偿
-*/
 
-int main() {
-	printf("规则集的读取------------------------------------\n");
-	char* rule_path = "E:\\c_project\\rule_set\\1.txt";
-	char rule_set[20][17];
-	memset(rule_set, 0, sizeof(rule_set));
-	for (int i = 0; i < 20; i++) {
-		printf("规则%d:%s\n", i, rule_set[i]);
-	}
-	rule_read(rule_path,rule_set);
-	for (int i = 0; i < 20; i++) {
-		printf("规则%d:%s  %d\n", i, rule_set[i],strlen(rule_set[i]));//strlen计算字符串长度时候不计算’\0’在内
-	}
-	printf("规则集的读取------------------------------------\n");
 
-	system("pause");
-	return 0;
-}
+
+//int main() {
+//	printf("规则集的读取------------------------------------\n");
+//	char* rule_path = "E:\\c_project\\rule_set\\1.txt";
+//	char rule_set[20][17];
+//	memset(rule_set, 0, sizeof(rule_set));
+//	for (int i = 0; i < 20; i++) {
+//		printf("规则%d:%s\n", i, rule_set[i]);
+//	}
+//	rule_read(rule_path,rule_set);
+//	for (int i = 0; i < 20; i++) {
+//		printf("规则%d:%s  %d\n", i, rule_set[i],strlen(rule_set[i]));//strlen计算字符串长度时候不计算’\0’在内
+//	}
+//	printf("规则集的读取------------------------------------\n");
+//
+//	system("pause");
+//	return 0;
+//}

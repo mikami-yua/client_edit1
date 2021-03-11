@@ -27,6 +27,7 @@
     <ClCompile Include="client_user.c" />
     <ClCompile Include="cmsg_dec.c" />
     <ClCompile Include="cmsg_enc.c" />
+    <ClCompile Include="cpptest.cpp" />
     <ClCompile Include="cusr_cmd.c" />
     <ClCompile Include="file_preproc.c" />
     <ClCompile Include="handsk.c" />
@@ -43,6 +44,7 @@
     <ClInclude Include="client_user.h" />
     <ClInclude Include="cmsg_dec.h" />
     <ClInclude Include="cmsg_enc.h" />
+    <ClInclude Include="cpptest.h" />
     <ClInclude Include="cusr_cmd.h" />
     <ClInclude Include="file_preproc.h" />
     <ClInclude Include="handsk.h" />
@@ -110,12 +112,12 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>G:\OpenSSL-Win32\include;$(IncludePath)</IncludePath>
+    <IncludePath>G:\OpenSSL-Win32\include;E:\c_project\client_edit1\deps;E:\c_project\client_edit1\include;$(IncludePath)</IncludePath>
     <LibraryPath>G:\OpenSSL-Win32\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>G:\OpenSSL-Win32\include;$(IncludePath)</IncludePath>
+    <IncludePath>G:\OpenSSL-Win32\include;E:\c_project\client_edit1\deps;E:\c_project\client_edit1\include;$(IncludePath)</IncludePath>
     <LibraryPath>G:\OpenSSL-Win32\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -139,6 +141,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -156,6 +159,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

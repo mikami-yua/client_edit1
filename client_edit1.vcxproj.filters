@@ -57,10 +57,13 @@
     <ClCompile Include="vector.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="file_preproc.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
     <ClCompile Include="token.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="file_preproc.c">
+    <ClCompile Include="cpptest.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -117,6 +120,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="file_preproc.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="cpptest.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

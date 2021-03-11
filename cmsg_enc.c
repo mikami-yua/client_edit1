@@ -35,10 +35,10 @@ int init_login_struct(LIG_MSG *l, MYSELF *m)
 }
 
 /*
-·â×°µÇÂ¼ÏûÏ¢
-@buf: ÏûÏ¢»º³åÇø
-@n: ÏûÏ¢³¤¶È
-@stype: ÏûÏ¢×ÓÀàÐÍ
+å°è£…ç™»å½•æ¶ˆæ¯
+@buf: æ¶ˆæ¯ç¼“å†²åŒº
+@n: æ¶ˆæ¯é•¿åº¦
+@stype: æ¶ˆæ¯å­ç±»åž‹
 */
 int enc_login_msg(char *buf, int *n, unsigned char stype)
 {
@@ -56,7 +56,7 @@ int init_chat_struct(CHAT_MSG *c, MYSELF *m, char *msg, int rid)
 	c->ch_sid = htonl(m->w_id);
 	c->ch_rid = htonl(rid);
 
-	/*¼ÓÃÜµÄÏûÏ¢*/
+	/*åŠ å¯†çš„æ¶ˆæ¯*/
 	msg_encipher(msg, CIPHER_KEY);
 	strcpy(c->ch_msg, msg);
 
