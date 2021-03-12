@@ -4,12 +4,11 @@
 
 //#include "cppjieba/Jieba.hpp"
 
-const char* DICT_PATH = "./dict/jieba.dict.utf8";
-const char* HMM_PATH = "./dict/hmm_model.utf8";
-const char* USER_DICT = "./dict/user.dict.utf8";
-const char* IDF_PATH = "./dict/idf.utf8";
-const char* STOP_WORDS_PATH = "./dict/stop_words.utf8";
 
+/*
+实现类似java静态代码块的功能
+*/
+//#define main main(){init();/##/
 
 /*
 计算字符串的hash值  使用md5函数可以生成128bit的哈希值
@@ -186,9 +185,10 @@ int main() {
     //get_random_table(11);
 
     test66();
-   /*
-   c中调用cpp函数：https://www.cnblogs.com/zj-blogs/p/11161953.html
-   */
+    /*
+    c中调用cpp函数：https://www.cnblogs.com/zj-blogs/p/11161953.html
+    */
+    test67();
 
 	system("pause");
 	return 0;
