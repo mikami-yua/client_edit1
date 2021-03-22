@@ -5,10 +5,6 @@
 //#include "cppjieba/Jieba.hpp"
 
 
-/*
-实现类似java静态代码块的功能
-*/
-//#define main main(){init();/##/
 
 /*
 计算字符串的hash值  使用md5函数可以生成128bit的哈希值
@@ -81,12 +77,6 @@ void get_random_table(int or_seed) {
     }
 }
 
-//把一个超长字符串（一段话）转换为token串-----使用分词技术
-void jieba_test() {
-    
-    
-
-}
 
 ////////////////////////////////////////////////////////////////////
 
@@ -180,7 +170,7 @@ int main() {
     
     for (int i = 0; i < 16; i++) {
         printf("%x ", show[i]);
-    }
+    }    
     printf("\n");
     //get_random_table(11);
 
@@ -188,7 +178,8 @@ int main() {
     /*
     c中调用cpp函数：https://www.cnblogs.com/zj-blogs/p/11161953.html
     */
-    test67();
+    char* msg_path = "E:\\c_project\\rule_set\\2.txt";
+    test68(msg_path);
 
 	system("pause");
 	return 0;

@@ -25,24 +25,6 @@ c++下怎么完成初始化代码块
 */
 
 
-void init() {
-	//代码
-	cout << "print init" << endl;
-	const char* const DICT_PATH = "dict/jieba.dict.utf8";
-	const char* const HMM_PATH = "dict/hmm_model.utf8";
-	const char* const USER_DICT_PATH = "dict/user.dict.utf8";
-	const char* const IDF_PATH = "dict/idf.utf8";
-	const char* const STOP_WORD_PATH = "dict/stop_words.utf8";
-	printf("加载dict...\n");
-	
-	
-	cppjieba::Jieba jieba1(DICT_PATH,
-		HMM_PATH,
-		USER_DICT_PATH,
-		IDF_PATH,
-		STOP_WORD_PATH);
-	printf("加载完成...\n");
-}
 
 void test66() {
 	char ch0[] = { "我喜欢吃苹果和apple banana" };
@@ -93,6 +75,49 @@ void test67() {
 	string s = ch1;
 	cout << "切分" << endl;
 	size_t size = 250;
+	we.Extract(s, words, size);
+	for (vector<string>::iterator vit = words.begin(); vit != words.end(); vit++) {
+		cout << *vit << " ";
+	}
+}
+
+/*
+从文件中读取msg
+@filename:消息的存储路径
+@return:返回一个消息的string，注意在使用完后free这个string
+*/
+char* msg_read(char* filename) {
+	char* text;
+	FILE* pf = fopen(filename, "r");
+	fseek(pf, 0, SEEK_END);
+	long lSize = ftell(pf);
+	// 用完后需要将内存free掉
+	text = (char*)malloc(lSize + 1);
+	rewind(pf);
+	fread(text, sizeof(char), lSize, pf);
+	text[lSize] = '\0';
+	return text;
+}
+
+/*
+对传入的消息使用分词技术，并返回一个string数组
+*/
+void test68(char *msg_path) {
+	char* zf_msg;
+	zf_msg = msg_read(msg_path);
+
+	///-------------------------------------------------------
+	const char* const DICT_PATH = "dict/jieba.dict.utf8";
+	const char* const HMM_PATH = "dict/hmm_model.utf8";
+	const char* const USER_DICT_PATH = "dict/user.dict.utf8";
+	const char* const IDF_PATH = "dict/idf.utf8";
+	const char* const STOP_WORD_PATH = "dict/stop_words.utf8";
+	cout << "加载dict" << endl;
+	cppjieba::KeywordExtractor we(DICT_PATH, HMM_PATH, IDF_PATH, STOP_WORD_PATH);//可以使用5个参数，加入自定义字典
+	vector<string> words;
+	string s = zf_msg;
+	cout << "切分" << endl;
+	size_t size = 300;
 	we.Extract(s, words, size);
 	for (vector<string>::iterator vit = words.begin(); vit != words.end(); vit++) {
 		cout << *vit << " ";

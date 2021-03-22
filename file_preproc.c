@@ -32,6 +32,7 @@ void rule_read(char *rule_path,char (*rule_set)[17]) {
 
 
 
+
 //int main() {
 //	printf("规则集的读取------------------------------------\n");
 //	char* rule_path = "E:\\c_project\\rule_set\\1.txt";
@@ -45,6 +46,14 @@ void rule_read(char *rule_path,char (*rule_set)[17]) {
 //		printf("规则%d:%s  %d\n", i, rule_set[i],strlen(rule_set[i]));//strlen计算字符串长度时候不计算’\0’在内
 //	}
 //	printf("规则集的读取------------------------------------\n");
+//
+//	char* msg_path= "E:\\c_project\\rule_set\\2.txt";
+//	printf("消息的读取------------------------------------\n");
+//	char* zf_msg;//政府工作报告msg
+//	zf_msg = msg_read(msg_path);
+//	printf("%s\n", zf_msg);
+//	printf("%d\n", strlen(zf_msg));
+//	
 //
 //	system("pause");
 //	return 0;

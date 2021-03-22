@@ -10,5 +10,7 @@
 */
 
 
+void rule_read(char* rule_path, char(*rule_set)[17]);
+
 
 #endif // !FILE_PREPROC

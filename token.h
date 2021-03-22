@@ -10,6 +10,7 @@ token化
 
 #include"im_client.h"
 //#include"cpptest.h"
+#include"file_preproc.h"
 
 
 
