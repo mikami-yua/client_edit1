@@ -29,6 +29,7 @@
     <ClCompile Include="cmsg_enc.c" />
     <ClCompile Include="cpptest.cpp" />
     <ClCompile Include="cusr_cmd.c" />
+    <ClCompile Include="encode.c" />
     <ClCompile Include="file_preproc.c" />
     <ClCompile Include="handsk.c" />
     <ClCompile Include="list.c" />
@@ -46,6 +47,7 @@
     <ClInclude Include="cmsg_enc.h" />
     <ClInclude Include="cpptest.h" />
     <ClInclude Include="cusr_cmd.h" />
+    <ClInclude Include="encode.h" />
     <ClInclude Include="file_preproc.h" />
     <ClInclude Include="handsk.h" />
     <ClInclude Include="im_client.h" />

@@ -66,6 +66,9 @@
     <ClCompile Include="cpptest.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="encode.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="client_config.h">
@@ -123,6 +126,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="cpptest.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="encode.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

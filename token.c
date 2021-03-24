@@ -162,25 +162,25 @@ void get_string_16(char *msg, unsigned char* untoken_16) {
 }
 
 
-int main() {
-    char* str = "规则集k";
-    unsigned char show[17] = {'\0'};
-    get_string_16(str, show);
-
-    
-    for (int i = 0; i < 16; i++) {
-        printf("%x ", show[i]);
-    }    
-    printf("\n");
-    //get_random_table(11);
-
-    test66();
-    /*
-    c中调用cpp函数：https://www.cnblogs.com/zj-blogs/p/11161953.html
-    */
-    char* msg_path = "E:\\c_project\\rule_set\\2.txt";
-    test68(msg_path);
-
-	system("pause");
-	return 0;
-}
+//int main() {
+//    char* str = "规则集k";
+//    unsigned char show[17] = {'\0'};
+//    get_string_16(str, show);
+//
+//    
+//    for (int i = 0; i < 16; i++) {
+//        printf("%x ", show[i]);
+//    }    
+//    printf("\n");
+//    //get_random_table(11);
+//
+//    test66();
+//    /*
+//    c中调用cpp函数：https://www.cnblogs.com/zj-blogs/p/11161953.html
+//    */
+//    char* msg_path = "E:\\c_project\\rule_set\\2.txt";
+//    test68(msg_path);
+//
+//	system("pause");
+//	return 0;
+//}
